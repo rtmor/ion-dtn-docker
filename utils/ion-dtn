@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# /etc/init.d/mysystem
+# Subsystem file for "MySystem" server
+#
+# chkconfig: 2345 95 05	(1)
+# description: MySystem server daemon
+#
+# processname: MySystem
+# config: /etc/ion/sample.rc
+# config: /etc/sysconfig/mySystem
+# pidfile: /var/run/ion.pid
+
+# source function library
+. /etc/rc.d/init.d/functions
+
+# pull in sysconfig settings
+# [ -f /etc/sysconfig/mySystem ] && . /etc/sysconfig/mySystem	(2)
+
+declare -r program='ion-dtn'
+declare -r default_config='/etc/ion/ion.rc'
+
+RETVAL=0
+ION_CONFIG_FILE="${ION_CONFIG_FILE:=$default_config}"
+
+start() {	
+	echo -n $"Starting ${program}:"
+
+  # start ion service
+  ionstart -I ${ION_CONFIG_FILE}
+
+	RETVAL=$?
+	[ "$RETVAL" = 0 ] && touch /var/lock/subsys/${program}
+	echo
+}
+
+stop() {	
+	echo -n $"Stopping ${program}:"
+  killm
+	RETVAL=$?
+	[ "$RETVAL" = 0 ] && rm -f /var/lock/subsys/${program}
+	echo
+}
+
+reload() {
+	echo -n $"Reloading ${program}:"
+  killm
+	RETVAL=$?
+	echo
+}
+
+case "$1" in
+	start)
+		start
+		;;
+	stop)
+		stop
+		;;
+	restart)
+		stop
+		start
+		;;
+	reload)
+		reload
+		;;
+	condrestart)
+		if [ -f /var/lock/subsys/${program}] ; then
+			stop
+			# avoid race
+			sleep 3
+			start
+		fi
+		;;
+	status)
+		# status $prog
+    echo 'not yet implemented'
+		RETVAL=$?
+		;;
+	*)
+		echo $"Usage: $0 {start|stop|restart|reload|condrestart|status}"
+		RETVAL=1
+esac
+exit $RETVAL

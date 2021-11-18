@@ -1,0 +1,32 @@
+version: "3.8"
+services:
+  ion-node-1:
+    image: ion-node:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host10.rc"
+    volumes:
+      - ../../config/two-node:/usr/local/etc/ion:ro
+    command:
+      [
+        "docker-entrypoint.sh", "bpecho", "ipn:10.1", "-C"
+      ]
+    networks:
+      - ion-net
+  ion-node-2:
+    image: ion-node:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host11.rc"
+    volumes:
+      - ../../config/two-node:/usr/local/etc/ion:ro
+    command:
+      [
+      "docker-entrypoint.sh", "bping", "-C", "ipn:11.1", "ipn:10.1"
+      ]
+    networks:
+      - ion-net
+networks:
+  ion-net:

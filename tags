@@ -1,0 +1,56 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/rtmoran/documents/class/ipnsig/docker/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	//
+.DEFAULT_GOAL	Makefile	/^.DEFAULT_GOAL := help$/;"	m
+CMD_REPOLOGIN	Makefile	/^CMD_REPOLOGIN := "aws ecr get-login-password --region ${AWS_CLI_REGION} | \\$/;"	m
+SHELL	Makefile	/^SHELL=\/usr\/bin\/bash$/;"	m
+VERSION	Makefile	/^VERSION := "git --no-pager log -1 --oneline --format=\\"%Cblue%h %Cgreen%D\\""$/;"	m
+_bpadmin	utils/bpv7_wrapper.sh	/^_bpadmin() {$/;"	f
+_bpcancel	utils/bpv7_wrapper.sh	/^_bpcancel() {}$/;"	f
+_bpchat	utils/bpv7_wrapper.sh	/^_bpchat() {}$/;"	f
+_bpclm	utils/bpv7_wrapper.sh	/^_bpclm() {}$/;"	f
+_bpclock	utils/bpv7_wrapper.sh	/^_bpclock() {}$/;"	f
+_bpcounter	utils/bpv7_wrapper.sh	/^_bpcounter() {}$/;"	f
+_bpcp	utils/bpv7_wrapper.sh	/^_bpcp() {}$/;"	f
+_bpcpd	utils/bpv7_wrapper.sh	/^_bpcpd() {}$/;"	f
+_bpcrash	utils/bpv7_wrapper.sh	/^_bpcrash() {}$/;"	f
+_bpdriver	utils/bpv7_wrapper.sh	/^_bpdriver() {}$/;"	f
+_bpecho	utils/bpv7_wrapper.sh	/^_bpecho() {}$/;"	f
+_bping	utils/bpv7_wrapper.sh	/^_bping() {}$/;"	f
+_bplist	utils/bpv7_wrapper.sh	/^_bplist() {}$/;"	f
+_bpnmtest	utils/bpv7_wrapper.sh	/^_bpnmtest()$/;"	f
+_bprecvfile	utils/bpv7_wrapper.sh	/^_bprecvfile() {}$/;"	f
+_bpsecadmin	utils/bpv7_wrapper.sh	/^_bpsecadmin() {}$/;"	f
+_bpsink	utils/bpv7_wrapper.sh	/^_bpsink() {}$/;"	f
+_bpsource	utils/bpv7_wrapper.sh	/^_bpsource() {}$/;"	f
+_bpstats	utils/bpv7_wrapper.sh	/^_bpstats() {}$/;"	f
+_bpstats2	utils/bpv7_wrapper.sh	/^_bpstats2() {}$/;"	f
+_bptrace	utils/bpv7_wrapper.sh	/^_bptrace() {}$/;"	f
+_bptransit	utils/bpv7_wrapper.sh	/^_bptransit() {}$/;"	f
+_bputa	utils/bpv7_wrapper.sh	/^_bputa() {}$/;"	f
+_bpversion	utils/bpv7_wrapper.sh	/^_bpversion() {}/;"	f
+_down-example1	Makefile	/^_down-example1: ## Bring down docker compose development environment (docker-compose)$/;"	t
+_up-example1	Makefile	/^_up-example1: ## Start docker compose example 1 environment (docker-compose)$/;"	t
+build-%	Makefile	/^build-%: ## Build container `Dockerfile_{image}`$/;"	t
+build-all	Makefile	/^build-all:$/;"	t
+build-nc-%	Makefile	/^build-nc-%: ## Build container `Dockerfile_{image}` without caching$/;"	t
+down-%	Makefile	/^down-%: ## Bring down docker compose environment `{dev, staging, prod}`$/;"	t
+dpl	Makefile	/^dpl ?= deploy.env$/;"	m
+help	Makefile	/^help: ## For this help menu$/;"	t
+list-builds	Makefile	/^list-builds: ## Output a list of all available Dockerfile builds$/;"	t
+prune	Makefile	/^prune: ## Clean all docker resources - images, containers, volumes & networks$/;"	t
+prune-network	Makefile	/^prune-network: ## Clean all docker network resources$/;"	t
+publish-%	Makefile	/^publish-%: ## Publish the `{container:version}` tagged container to ECR$/;"	t
+publish-all	Makefile	/^publish-all: ## Publish all latest tagged containers to ECR$/;"	t
+repo-login	Makefile	/^repo-login: ## Auto login to AWS-ECR unsing aws-cli$/;"	t
+tag-%	Makefile	/^tag-%: ## Generate container `{container:version}` ECR tag$/;"	t
+up-%	Makefile	/^up-%: ## Bring up docker compose environment `{dev, staging, prod}`$/;"	t
+version	Makefile	/^version: ## Output the current git commit to be built$/;"	t
