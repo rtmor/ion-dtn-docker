@@ -4,3 +4,6 @@ tags
 # local env files
 *_template
 *.env
+
+# source code
+*.zip
