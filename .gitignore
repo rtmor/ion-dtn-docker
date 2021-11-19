@@ -1,0 +1,6 @@
+# advanced nvim completion
+tags
+
+# local env files
+*_template
+*.env
