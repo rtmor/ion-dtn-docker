@@ -1,19 +1,19 @@
-FROM ubuntu:focal
+# ION-DTN Docker image file
+# Ryan T. Moran
+#
+FROM debian:bullseye-slim AS builder
 
-ENV ION_SRC="ipnsig-pwg-main"
-ENV ION_VERSION="ion-4.1.0"
-ENV ION_CONFIG_FILE="sample.rc"
+ENV ION_SRC="ipnsig-pwg-main" \
+    ION_VERSION="ion-4.1.0"
 
-WORKDIR /ion_build
+WORKDIR /build
 
-ADD ${ION_SRC}.zip .
+ADD build/${ION_SRC}.zip .
 
-RUN chown -R 1000.1000 .
-
-
-RUN DEBIAN_FRONTEND=noninteractive apt --no-install-recommends update && \
-    apt upgrade && \
-    apt install build-essential unzip -y
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update && \
+    apt-get upgrade && \
+    apt-get install --no-install-recommends -y build-essential unzip
 
 RUN export BUILD_DIR=$(mktemp -d) && \
     unzip ${ION_SRC}.zip -d ${BUILD_DIR} && \
@@ -23,13 +23,28 @@ RUN export BUILD_DIR=$(mktemp -d) && \
     make install && \
     ldconfig
 
-# USER 1000:1000
+FROM debian:bullseye-slim
+
+RUN DEBIAN_FRONTEND=noninteractive \
+    apt-get update && \
+    apt-get upgrade && \
+    apt-get install --no-install-recommends -y ca-certificates gosu
+
+COPY --from=builder /usr/local/src /usr/local/src
+COPY config/sample.rc /usr/local/etc/ion/ion.rc
+
+WORKDIR /service
+
+RUN groupadd -r ionserv && \
+    useradd -r -g ionserv ionserv && \
+    chown -R ionserv:ionserv /service
 
 ENV PATH=/usr/local/src/bin:${PATH}
 
 EXPOSE 1113/udp
 
-COPY ./build/docker-entrypoint.sh /usr/bin
-ENTRYPOINT ["docker-entrypoint.sh"]
+COPY build/docker-entrypoint.sh /usr/bin
 
-CMD [ "/bin/bash", "-c" ]
+ENTRYPOINT [ "docker-entrypoint.sh" ]
+
+# CMD [ "/bin/bash", "-c" ]

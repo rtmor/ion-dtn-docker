@@ -1,3 +1,6 @@
+## ION-DTN configuration for node-10 (ipn:10.x)
+## Ryan T. Moran
+
 ## begin ionadmin
 1 10 ''
 s
@@ -23,10 +26,10 @@ m consumption 10000000
 ## begin ltpadmin
 1 32
 
-a span 10 32 32 1400 10000 1 'udplso ion-node-1:1113' 300
-a span 11 32 32 1400 10000 1 'udplso ion-node-2:1113' 300
+a span 10 32 32 1400 10000 1 'udplso ion-node-10:1113' 300
+a span 11 32 32 1400 10000 1 'udplso ion-node-11:1113' 300
 
-s 'udplsi ion-node-1:1113'
+s 'udplsi ion-node-10:1113'
 ## end ltpadmin
 
 ## begin bpadmin
@@ -52,4 +55,5 @@ s
 a plan 10 ltp/10
 a plan 11 ltp/11
 
+a exit 14 14 ipn:11.0
 ## end ipnadmin
