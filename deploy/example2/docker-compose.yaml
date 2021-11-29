@@ -1,0 +1,76 @@
+# Example Docker-Compose configuration for testing ION-DTN
+# Five-node Exit Ping: This example demonstrates a simple ping utility between ipn:10.1
+#                      and ipn:14.1 by way of nodes ipn:10 => ipn:11 => ipn:12 => ipn:14 => ipn:15
+#                      through use of predefined exit-node configurations.
+# Ryan T. Moran
+#
+version: "3.8"
+services:
+  ion-node-10:
+    image: local/ion-dtn:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host10.rc"
+    volumes:
+      - ../../config/five-node-exit:/usr/local/etc/ion:ro
+    command:
+      [
+      # "bping", "-C", "ipn:10.2", "ipn:14.2"
+      "bpecho", "ipn:10.1", "-C"
+      ]
+    networks:
+      - ion-net
+  ion-node-11:
+    image: local/ion-dtn:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host11.rc"
+    volumes:
+      - ../../config/five-node-exit:/usr/local/etc/ion:ro
+    command:
+      [ "tail", "-f", "ion.log"]
+    networks:
+      - ion-net
+  ion-node-12:
+    image: local/ion-dtn:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host12.rc"
+    volumes:
+      - ../../config/five-node-exit:/usr/local/etc/ion:ro
+    command:
+      [ "tail", "-f", "ion.log"]
+    networks:
+      - ion-net
+  ion-node-13:
+    image: local/ion-dtn:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host13.rc"
+    volumes:
+      - ../../config/five-node-exit:/usr/local/etc/ion:ro
+    command:
+      [ "tail", "-f", "ion.log"]
+    networks:
+      - ion-net
+  ion-node-14:
+    image: local/ion-dtn:latest
+    ports:
+      - "1113/udp"
+    environment:
+      ION_CONFIG_PATH: "/usr/local/etc/ion/host14.rc"
+    volumes:
+      - ../../config/five-node-exit:/usr/local/etc/ion:ro
+    command:
+      [
+        # "bpecho", "ipn:14.2", "-C"
+        "bping", "-C", "ipn:14.1", "ipn:10.1"
+      ]
+    networks:
+      - ion-net
+networks:
+  ion-net:

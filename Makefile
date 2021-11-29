@@ -1,3 +1,8 @@
+# ION-DTN Docker Container
+# Ryan T. Moran
+# Development Makefile: This Makefile is provided to simplify regular Docker commands that a
+# 						ION-DTN tester might likely encounter.
+#
 # import deploy config
 dpl ?= deploy.env
 include $(dpl)
@@ -5,8 +10,8 @@ export $(shell sed 's/=.*//' $(dpl))
 
 .SILENT:
 
-.PHONY: help build-% build-nc-% up-% down-% \
-		publish-version-% publish-% tag-latest-% \
+.PHONY: help build build-nc up-% down-% \
+		publish-version-% publish tag tag-latest-% \
 		tag-version-% repo-login
 
 # HELP
@@ -20,27 +25,26 @@ help: ## For this help menu
 SHELL=/usr/bin/bash
 
 # DOCKER TASKS
+
 build-all:
 	@-for i in $(COMPOSE_EXAMPLES); do \
 		make build-$$i:latest; \
 	done
 
 # Build the container
-build-%: ## Build and tag ion container from `Dockerfile`; build-{image_name:version}
-	$(eval image := $(firstword $(subst :, ,$*)))
-	$(eval version := $(lastword $(subst :, ,$*)))
-	@if [ "$(image)" = "$(version)" ]; then \
-		echo -e "Error: version not provided.\\n"; \
-		make -s help; exit 1; \
-	fi
-	@echo "[ion] Building container $*"
-	docker build -t ${image}:${version} -f build/Dockerfile .
+# build-%: ## Build and tag ion container from `Dockerfile`; build-{image_name:version}
+build: ## Build and tag ion container from `Dockerfile`; build-{image_name:version}
+	@echo "[ion] Building container local/ion-dtn"
+	docker build -t local/ion-dtn:latest -f build/Dockerfile .
 
-build-nc-%: ## Build and tag ion container from `Dockerfile` without caching; ex: build-nc-{image_name:version}
-	$(eval image := $(firstword $(subst :, ,$*)))
-	$(eval version := $(lastword $(subst :, ,$*)))
+# build-nc-%: ## Build and tag ion container from `Dockerfile` without caching; ex: build-nc-{image_name:version}
+build-nc: ## Build and tag ion container from `Dockerfile` without caching; ex: build-nc-{image_name:version}
 	@echo "[ion] Building container --no-cache $*"
-	docker build --no-cache -t ${image}:${version} -f build/Dockerfile .
+	docker build --no-cache -t local/ion-dtn:latest -f build/Dockerfile .
+
+_up-sample1: ## Start docker compose example2 environment (docker-compose)
+	@echo "[ion] Starting docker-compose sample1 environment"
+	docker-compose --file deploy/sample1/docker-compose.yaml up
 
 _up-example1: ## Start docker compose example1 environment (docker-compose)
 	@echo "[ion] Starting docker-compose example1 environment"
@@ -54,6 +58,11 @@ up-%: ## Bring up docker compose environment `{example1, example2, ...}`; ex: up
 	$(eval context := $*)
 	@if [ "$(context)" = "example1" ]; then make -s _up-example1; fi
 	@if [ "$(context)" = "example2" ]; then make -s _up-example2; fi
+	@if [ "$(context)" = "sample1" ]; then make -s _up-sample1; fi
+
+_down-sample1: ## Bring down docker compose example2 environment (docker-compose)
+	@echo "[ion] Bringing down docker-compose sample1"
+	docker-compose --file deploy/sample1/docker-compose.yaml down
 
 _down-example1: ## Bring down docker compose example1 environment (docker-compose)
 	@echo "[ion] Bringing down docker-compose example1"
@@ -73,18 +82,15 @@ down-%: ## Bring down docker compose environment `{example1, example2, ...}`
 # 		make publish-$$i:latest; \
 # 	done
 
-publish-%: ## Publish the `{container:version}` tagged container to ECR
-	$(eval image := $(firstword $(subst :, ,$*)))
-	$(eval version := $(lastword $(subst :, ,$*)))
-	@echo '[ion] Publish $* to $(DOCKER_REPO)'
-	@make -s repo-login tag-$*
-	docker push $(DOCKER_REPO)/${image}:${version}
+# publish-%: ## Publish the `{container:version}` tagged container to ECR
+publish: ## Publish the `{container:version}` tagged container to ECR
+	@echo '[ion] Publishing ion-dtn to repositiory'
+	@make -s repo-login tag
+	docker push $(DOCKER_USER)/ion-dtn:latest
 
-tag-%: ## Generate container `{container:version}` ECR tag
-	$(eval image := $(firstword $(subst :, ,$*)))
-	$(eval version := $(lastword $(subst :, ,$*)))
+tag: ## Generate container `{container:version}` ECR tag
 	@echo '[ion] Create AWS ECR tag for container $*'
-	docker tag ${image}:${version} $(DOCKER_REPO)/${image}:${version}
+	docker tag local/ion-dtn:latest ${DOCKER_USER}/ion-dtn:latest
 
 prune-network: ## Clean all docker network resources
 	@echo '[ion] Removing all docker network resources...'
@@ -96,8 +102,8 @@ prune: ## Clean all docker resources - images, containers, volumes & networks
 
 # HELPERS
 # generate script to login to aws docker repo
-CMD_REPOLOGIN := "aws ecr get-login-password --region ${AWS_CLI_REGION} | \
-				  docker login --username AWS --password-stdin $(DOCKER_REPO)"
+CMD_REPOLOGIN := "echo ${DOCKER_ACCESS_TOKEN} | \
+				  docker login --username ${DOCKER_USER} --password-stdin"
 
 VERSION := "git --no-pager log -1 --oneline --format=\"%Cblue%h %Cgreen%D\""
 

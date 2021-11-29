@@ -1,7 +1,12 @@
+# Example Docker-Compose configuration for testing ION-DTN
+# Two-node Ping: This example demonstrates a simple ping utility between ipn:10.1
+#                and ipn:11.1.
+# Ryan T. Moran
+#
 version: "3.8"
 services:
   ion-node-1:
-    image: ion-node:latest
+    image: local/ion-dtn:latest
     ports:
       - "1113/udp"
     environment:
@@ -10,12 +15,12 @@ services:
       - ../../config/two-node:/usr/local/etc/ion:ro
     command:
       [
-        "docker-entrypoint.sh", "bpecho", "ipn:10.1", "-C"
+        "bpecho", "ipn:10.1", "-C"
       ]
     networks:
       - ion-net
   ion-node-2:
-    image: ion-node:latest
+    image: local/ion-dtn:latest
     ports:
       - "1113/udp"
     environment:
@@ -24,7 +29,7 @@ services:
       - ../../config/two-node:/usr/local/etc/ion:ro
     command:
       [
-      "docker-entrypoint.sh", "bping", "-C", "ipn:11.1", "ipn:10.1"
+      "bping", "-C", "ipn:11.1", "ipn:10.1"
       ]
     networks:
       - ion-net

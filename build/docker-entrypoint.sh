@@ -1,41 +1,41 @@
 #!/bin/bash
+# Docker entrypoint for ION-DTN container image
+# Ryan T. Moran
+#
 set -e
+
+declare -r ion_version='4.10'
+declare -r default_config_location='/usr/local/etc/ion/ion.rc'
 
 # if first argument is single/double flag (-f | --option)
 if [ "${1#-}" != "$1" ]; then
-    echo "entry 1"
+  echo "entry 1"
 	set -- ionstart "$@"
-fi
-
 # if first argument has 'rc' extension
-if [ "${1%.rc}" != "$1" ]; then
-    echo "entry 2"
-    set -- ionstart -I "$@"
+elif [ "${1%.rc}" != "$1" ]; then
+  echo "entry 2"
+  set -- ionstart -I "$@"
+elif [ "$1" = 'ionstart' -a "$(id -u)" = '0' ]; then
+  # find . \! -user ionserv -exec chown ionserv:ionserv '{}' +
+  set -- gosu ionserv "$0" "$@"
+
+elif [ ${#} == 0 -o "${1}" != "ionstart" ]; then
+  echo "entry 3"
+  ionstart -I "${ION_CONFIG_PATH:=$default_config_location}"
+  set -- "$@"
 fi
 
-if [ ${#} == 0 -o "${1}" != "ionstart" ]; then
-    echo "entry 3"
-    ionstart -I "${ION_CONFIG_PATH:="/usr/local/etc/ion/ion.rc"}"
-    set -- "$@"
-fi
-
-# allow the container to be started with `--user`
-# if [ "$1" = 'redis-server' -a "$(id -u)" = '0' ]; then
-# 	find . \! -user redis -exec chown redis '{}' +
-# 	exec gosu redis "$0" "$@"
-# fi
-
-echo "\
-ION DTNv4.10
-$(bpversion)
-Container intialized"
-
-echo "$@"
 "$@"
 
-# ion tools do not run in foreground causing container
-# to terminate on 'ionstart' return value
-while true
-do
-    sleep 1
-done
+cat << EOF
+
+ION Docker Container Started:
+  ION-DTN:          v${ion_version}
+  Bundle Protocol:  $(bpversion)
+
+<Ctrl-C> to return
+EOF
+
+# necessary until ionstart entrypoint is rewritten
+# to support foreground starts
+sleep infinity
