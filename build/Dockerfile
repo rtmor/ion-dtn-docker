@@ -3,6 +3,10 @@
 #
 FROM debian:bullseye-slim AS builder
 
+LABEL "org.rtmoran.version"="0.1"
+LABEL "org.rtmoran.maintainer"="Ryan T. Moran <ryan@rtmoran.org>"
+LABEL "org.rtmoran.description"="https://github.com/rtmor/ion-container"
+
 ENV ION_SRC="ipnsig-pwg-main" \
     ION_VERSION="ion-4.1.0"
 
@@ -46,5 +50,3 @@ EXPOSE 1113/udp
 COPY build/docker-entrypoint.sh /usr/bin
 
 ENTRYPOINT [ "docker-entrypoint.sh" ]
-
-# CMD [ "/bin/bash", "-c" ]

@@ -2,7 +2,7 @@
 # Five-node Exit Ping: This example demonstrates a simple ping utility between ipn:10.1
 #                      and ipn:14.1 by way of nodes ipn:10 => ipn:11 => ipn:12 => ipn:14 => ipn:15
 #                      through use of predefined exit-node configurations.
-# Ryan T. Moran
+# Ryan T. Moran, 2021
 #
 version: "3.8"
 services:
@@ -16,7 +16,6 @@ services:
       - ../../config/five-node-exit:/usr/local/etc/ion:ro
     command:
       [
-      # "bping", "-C", "ipn:10.2", "ipn:14.2"
       "bpecho", "ipn:10.1", "-C"
       ]
     networks:
@@ -67,7 +66,6 @@ services:
       - ../../config/five-node-exit:/usr/local/etc/ion:ro
     command:
       [
-        # "bpecho", "ipn:14.2", "-C"
         "bping", "-C", "ipn:14.1", "ipn:10.1"
       ]
     networks:

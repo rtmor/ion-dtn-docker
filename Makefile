@@ -39,19 +39,19 @@ build: ## Build and tag ion container from `Dockerfile`; build-{image_name:versi
 
 # build-nc-%: ## Build and tag ion container from `Dockerfile` without caching; ex: build-nc-{image_name:version}
 build-nc: ## Build and tag ion container from `Dockerfile` without caching; ex: build-nc-{image_name:version}
-	@echo "[ion] Building container --no-cache $*"
+	@echo "[ion-container] Building container --no-cache $*"
 	docker build --no-cache -t local/ion-dtn:latest -f build/Dockerfile .
 
 _up-sample1: ## Start docker compose example2 environment (docker-compose)
-	@echo "[ion] Starting docker-compose sample1 environment"
+	@echo "[ion-container] Starting docker-compose sample1 environment"
 	docker-compose --file deploy/sample1/docker-compose.yaml up
 
 _up-example1: ## Start docker compose example1 environment (docker-compose)
-	@echo "[ion] Starting docker-compose example1 environment"
+	@echo "[ion-container] Starting docker-compose example1 environment"
 	docker-compose --file deploy/example1/docker-compose.yaml up
 
 _up-example2: ## Start docker compose example2 environment (docker-compose)
-	@echo "[ion] Starting docker-compose example2 environment"
+	@echo "[ion-container] Starting docker-compose example2 environment"
 	docker-compose --file deploy/example2/docker-compose.yaml up
 
 up-%: ## Bring up docker compose environment `{example1, example2, ...}`; ex: up-example1
@@ -61,15 +61,15 @@ up-%: ## Bring up docker compose environment `{example1, example2, ...}`; ex: up
 	@if [ "$(context)" = "sample1" ]; then make -s _up-sample1; fi
 
 _down-sample1: ## Bring down docker compose example2 environment (docker-compose)
-	@echo "[ion] Bringing down docker-compose sample1"
+	@echo "[ion-container] Bringing down docker-compose sample1"
 	docker-compose --file deploy/sample1/docker-compose.yaml down
 
 _down-example1: ## Bring down docker compose example1 environment (docker-compose)
-	@echo "[ion] Bringing down docker-compose example1"
+	@echo "[ion-container] Bringing down docker-compose example1"
 	docker-compose --file deploy/example1/docker-compose.yaml down
 
 _down-example2: ## Bring down docker compose example2 environment (docker-compose)
-	@echo "[ion] Bringing down docker-compose example2"
+	@echo "[ion-container] Bringing down docker-compose example2"
 	docker-compose --file deploy/example1/docker-compose.yaml down
 
 down-%: ## Bring down docker compose environment `{example1, example2, ...}`
@@ -84,30 +84,30 @@ down-%: ## Bring down docker compose environment `{example1, example2, ...}`
 
 # publish-%: ## Publish the `{container:version}` tagged container to ECR
 publish: ## Publish the `{container:version}` tagged container to ECR
-	@echo '[ion] Publishing ion-dtn to repositiory'
+	@echo '[ion-container] Publishing ion-container to repositiory'
 	@make -s repo-login tag
 	docker push $(DOCKER_USER)/ion-dtn:latest
 
 tag: ## Generate container `{container:version}` ECR tag
-	@echo '[ion] Create AWS ECR tag for container $*'
+	@echo '[ion-container] Create DockerHub tag for container $*'
 	docker tag local/ion-dtn:latest ${DOCKER_USER}/ion-dtn:latest
 
 prune-network: ## Clean all docker network resources
-	@echo '[ion] Removing all docker network resources...'
+	@echo '[ion-container] Removing all docker network resources...'
 	docker system network prune
 
 prune: ## Clean all docker resources - images, containers, volumes & networks
-	@echo '[ion] Removing all docker resources...'
+	@echo '[ion-container] Removing all docker resources...'
 	docker system prune -a
 
 # HELPERS
-# generate script to login to aws docker repo
+# script to login to dockerhub/aws/other repo
 CMD_REPOLOGIN := "echo ${DOCKER_ACCESS_TOKEN} | \
 				  docker login --username ${DOCKER_USER} --password-stdin"
 
 VERSION := "git --no-pager log -1 --oneline --format=\"%Cblue%h %Cgreen%D\""
 
-# login to AWS-ECR
+# login to DockerHub
 repo-login: ## Auto login to AWS-ECR unsing aws-cli
 	@eval $(CMD_REPOLOGIN)
 
