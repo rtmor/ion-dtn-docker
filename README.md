@@ -12,7 +12,7 @@ The ION-DTN container is a pre-built ION image solution designed to support rapi
    - [Configuration](#configuration)
    - [Examples](#examples)
 3. [Multi-Node Environments](#multi-node-with-docker-compose)
-   - [Configuration](#configuration)
+   - [Configuration](#configuration-1)
    - [Networking](#networking)
 
 ## Quick Start
