@@ -10,10 +10,13 @@ The ION-DTN container is a pre-built ION image solution designed to support rapi
    - [From Source](#build-source)
 2. [Usage](#usage)
    - [Configuration](#configuration)
+   - [Environment Variables](#environment-variables)
    - [Examples](#examples)
 3. [Multi-Node Environments](#multi-node-with-docker-compose)
    - [Configuration](#configuration-1)
    - [Networking](#networking)
+4. [Makefile](#makefile)
+   - [deploy.env](#deploy.env)
 
 ## Quick Start
 
@@ -61,6 +64,12 @@ docker build -t local/ion-dtn:latest -f build/Dockerfile .
 By default, ION-DTN container will look to `/usr/local/etc/ion/ion.rc` to load the node's configuration file unless other wise defined through the use of the `ION_CONFIG_PATH` environment variable.
 
 Local ION configuration files may be passed to a ION container on run through the use of a Docker mount point. This can be achieved by specifiying the `-v | [--volume]` Docker flag on run.
+
+#### Environment Variables
+
+| Variable        | Default                     | Description                     |
+| --------------- | --------------------------- | ------------------------------- |
+| ION_CONFIG_PATH | `/usr/local/etc/ion/ion.rc` | ION-DTN configuration file path |
 
 ### Examples
 
@@ -145,4 +154,17 @@ s 'udplsi ion-node-2:1113'
 ...
 ```
 
-More information coming...
+## Makefile
+
+A `Makefile` has been included with this repository to simplify many of the Docker and Docker Compose tasks: `build`, `up`, `tag`, `push`, `login`.
+
+To use, ensure the `make` package is installed.
+
+Information on available features can be found by typing `make`.
+
+### deploy.env
+
+For integration with a personal DockerHub repository, the following must be defined within a `deploy.env` file at the root of the project.
+
+- `DOCKER_USER`
+- `DOCKER_ACCESS_TOKEN`

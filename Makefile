@@ -88,7 +88,7 @@ publish: ## Publish the `{container:version}` tagged container to ECR
 	@make -s repo-login tag
 	docker push $(DOCKER_USER)/ion-dtn:latest
 
-tag: ## Generate container `{container:version}` ECR tag
+tag: ## Generate container `{container:version}` DockerHub/AWS-ECR tag
 	@echo '[ion-container] Create DockerHub tag for container $*'
 	docker tag local/ion-dtn:latest ${DOCKER_USER}/ion-dtn:latest
 
@@ -108,7 +108,7 @@ CMD_REPOLOGIN := "echo ${DOCKER_ACCESS_TOKEN} | \
 VERSION := "git --no-pager log -1 --oneline --format=\"%Cblue%h %Cgreen%D\""
 
 # login to DockerHub
-repo-login: ## Auto login to AWS-ECR unsing aws-cli
+repo-login: ## Auto login to DockerHub/AWS-ECR unsing aws-cli
 	@eval $(CMD_REPOLOGIN)
 
 version: ## Output the current git commit to be built
